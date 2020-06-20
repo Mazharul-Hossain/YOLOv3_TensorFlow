@@ -5,6 +5,7 @@ from __future__ import division, print_function
 import numpy as np
 import tensorflow as tf
 
+
 def gpu_nms(boxes, scores, num_classes, max_boxes=50, score_thresh=0.5, nms_thresh=0.5):
     """
     Perform NMS on GPU using TensorFlow.
@@ -23,7 +24,7 @@ def gpu_nms(boxes, scores, num_classes, max_boxes=50, score_thresh=0.5, nms_thre
     max_boxes = tf.constant(max_boxes, dtype='int32')
 
     # since we do nms for single image, then reshape it
-    boxes = tf.reshape(boxes, [-1, 4]) # '-1' means we don't konw the exact number of boxes
+    boxes = tf.reshape(boxes, [-1, 4])  # '-1' means we don't konw the exact number of boxes
     score = tf.reshape(scores, [-1, num_classes])
 
     # Step 1: Create a filtering mask based on "box_class_scores" by using "threshold".
@@ -31,13 +32,13 @@ def gpu_nms(boxes, scores, num_classes, max_boxes=50, score_thresh=0.5, nms_thre
     # Step 2: Do non_max_suppression for each class
     for i in range(num_classes):
         # Step 3: Apply the mask to scores, boxes and pick them out
-        filter_boxes = tf.boolean_mask(boxes, mask[:,i])
-        filter_score = tf.boolean_mask(score[:,i], mask[:,i])
+        filter_boxes = tf.boolean_mask(boxes, mask[:, i])
+        filter_score = tf.boolean_mask(score[:, i], mask[:, i])
         nms_indices = tf.image.non_max_suppression(boxes=filter_boxes,
                                                    scores=filter_score,
                                                    max_output_size=max_boxes,
                                                    iou_threshold=nms_thresh, name='nms_indices')
-        label_list.append(tf.ones_like(tf.gather(filter_score, nms_indices), 'int32')*i)
+        label_list.append(tf.ones_like(tf.gather(filter_score, nms_indices), 'int32') * i)
         boxes_list.append(tf.gather(filter_boxes, nms_indices))
         score_list.append(tf.gather(filter_score, nms_indices))
 
@@ -102,18 +103,18 @@ def cpu_nms(boxes, scores, num_classes, max_boxes=50, score_thresh=0.5, iou_thre
     picked_boxes, picked_score, picked_label = [], [], []
 
     for i in range(num_classes):
-        indices = np.where(scores[:,i] >= score_thresh)
+        indices = np.where(scores[:, i] >= score_thresh)
         filter_boxes = boxes[indices]
-        filter_scores = scores[:,i][indices]
-        if len(filter_boxes) == 0: 
+        filter_scores = scores[:, i][indices]
+        if len(filter_boxes) == 0:
             continue
         # do non_max_suppression on the cpu
         indices = py_nms(filter_boxes, filter_scores,
                          max_boxes=max_boxes, iou_thresh=iou_thresh)
         picked_boxes.append(filter_boxes[indices])
         picked_score.append(filter_scores[indices])
-        picked_label.append(np.ones(len(indices), dtype='int32')*i)
-    if len(picked_boxes) == 0: 
+        picked_label.append(np.ones(len(indices), dtype='int32') * i)
+    if len(picked_boxes) == 0:
         return None, None, None
 
     boxes = np.concatenate(picked_boxes, axis=0)

@@ -4,7 +4,9 @@ from __future__ import division, print_function
 
 import numpy as np
 import tensorflow as tf
+
 slim = tf.contrib.slim
+
 
 def conv2d(inputs, filters, kernel_size, strides=1):
     def _fixed_padding(inputs, kernel_size):
@@ -15,11 +17,13 @@ def conv2d(inputs, filters, kernel_size, strides=1):
         padded_inputs = tf.pad(inputs, [[0, 0], [pad_beg, pad_end],
                                         [pad_beg, pad_end], [0, 0]], mode='CONSTANT')
         return padded_inputs
-    if strides > 1: 
+
+    if strides > 1:
         inputs = _fixed_padding(inputs, kernel_size)
     inputs = slim.conv2d(inputs, filters, kernel_size, stride=strides,
                          padding=('SAME' if strides == 1 else 'VALID'))
     return inputs
+
 
 def darknet53_body(inputs):
     def res_block(inputs, filters):
@@ -30,10 +34,10 @@ def darknet53_body(inputs):
         net = net + shortcut
 
         return net
-    
+
     # first two conv2d layers
-    net = conv2d(inputs, 32,  3, strides=1)
-    net = conv2d(net, 64,  3, strides=2)
+    net = conv2d(inputs, 32, 3, strides=1)
+    net = conv2d(net, 64, 3, strides=2)
 
     # res_block * 1
     net = res_block(net, 32)
@@ -85,5 +89,3 @@ def upsample_layer(inputs, out_shape):
     # TODO: Do we need to set `align_corners` as True?
     inputs = tf.image.resize_nearest_neighbor(inputs, (new_height, new_width), name='upsampled')
     return inputs
-
-

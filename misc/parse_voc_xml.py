@@ -25,7 +25,7 @@ test_path = [os.path.join(voc_07, 'ImageSets/Main/test.txt')]
 def parse_xml(path):
     tree = ET.parse(path)
     img_name = path.split('/')[-1][:-4]
-    
+
     height = tree.findtext("./size/height")
     width = tree.findtext("./size/width")
 
@@ -49,7 +49,10 @@ def parse_xml(path):
     else:
         return None
 
+
 test_cnt = 0
+
+
 def gen_test_txt(txt_path):
     global test_cnt
     f = open(txt_path, 'w')
@@ -71,6 +74,8 @@ def gen_test_txt(txt_path):
 
 
 train_cnt = 0
+
+
 def gen_train_txt(txt_path):
     global train_cnt
     f = open(txt_path, 'w')
@@ -93,4 +98,3 @@ def gen_train_txt(txt_path):
 
 gen_train_txt('train.txt')
 gen_test_txt('val.txt')
-

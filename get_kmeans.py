@@ -5,6 +5,7 @@ from __future__ import division, print_function
 
 import numpy as np
 
+
 def iou(box, clusters):
     """
     Calculates the Intersection over Union (IoU) between a box and k clusters.
@@ -103,7 +104,8 @@ def parse_anno(annotation_path, target_size=None):
         s = s[4:]
         box_cnt = len(s) // 5
         for i in range(box_cnt):
-            x_min, y_min, x_max, y_max = float(s[i*5+1]), float(s[i*5+2]), float(s[i*5+3]), float(s[i*5+4])
+            x_min, y_min, x_max, y_max = float(s[i * 5 + 1]), float(s[i * 5 + 2]), float(s[i * 5 + 3]), float(
+                s[i * 5 + 4])
             width = x_max - x_min
             height = y_max - y_min
             assert width > 0
@@ -123,7 +125,6 @@ def parse_anno(annotation_path, target_size=None):
 
 
 def get_kmeans(anno, cluster_num=9):
-
     anchors = kmeans(anno, cluster_num)
     ave_iou = avg_iou(anno, anchors)
 
@@ -152,4 +153,3 @@ if __name__ == '__main__':
     print(anchor_string)
     print('the average iou is:')
     print(ave_iou)
-

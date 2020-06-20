@@ -5,6 +5,7 @@
 # Removing them will shrink the checkpoint size a lot.
 
 import sys
+
 sys.path.append('..')
 
 import os

@@ -57,7 +57,8 @@ with tf.Session() as sess:
 
     pred_scores = pred_confs * pred_probs
 
-    boxes, scores, labels = gpu_nms(pred_boxes, pred_scores, args.num_class, max_boxes=200, score_thresh=0.3, nms_thresh=0.45)
+    boxes, scores, labels = gpu_nms(pred_boxes, pred_scores, args.num_class, max_boxes=200, score_thresh=0.3,
+                                    nms_thresh=0.45)
 
     saver = tf.train.Saver()
     saver.restore(sess, args.restore_path)
@@ -82,13 +83,14 @@ with tf.Session() as sess:
             boxes_[:, [0, 2]] = (boxes_[:, [0, 2]] - dw) / resize_ratio
             boxes_[:, [1, 3]] = (boxes_[:, [1, 3]] - dh) / resize_ratio
         else:
-            boxes_[:, [0, 2]] *= (width_ori/float(args.new_size[0]))
-            boxes_[:, [1, 3]] *= (height_ori/float(args.new_size[1]))
-
+            boxes_[:, [0, 2]] *= (width_ori / float(args.new_size[0]))
+            boxes_[:, [1, 3]] *= (height_ori / float(args.new_size[1]))
 
         for i in range(len(boxes_)):
             x0, y0, x1, y1 = boxes_[i]
-            plot_one_box(img_ori, [x0, y0, x1, y1], label=args.classes[labels_[i]] + ', {:.2f}%'.format(scores_[i] * 100), color=color_table[labels_[i]])
+            plot_one_box(img_ori, [x0, y0, x1, y1],
+                         label=args.classes[labels_[i]] + ', {:.2f}%'.format(scores_[i] * 100),
+                         color=color_table[labels_[i]])
         cv2.putText(img_ori, '{:.2f}ms'.format((end_time - start_time) * 1000), (40, 40), 0,
                     fontScale=1, color=(0, 255, 0), thickness=2)
         cv2.imshow('image', img_ori)

@@ -90,6 +90,7 @@ def bbox_crop(bbox, crop_box=None, allow_outside_center=True):
     bbox = bbox[mask]
     return bbox
 
+
 def bbox_iou(bbox_a, bbox_b, offset=0):
     """Calculate Intersection-Over-Union(IOU) of two bounding boxes.
     Parameters
@@ -197,13 +198,13 @@ def random_crop_with_constraints(bbox, size, min_scale=0.3, max_scale=1,
             if len(bbox) == 0:
                 top, bottom = crop_t, crop_t + crop_h
                 left, right = crop_l, crop_l + crop_w
-                return bbox, (left, top, right-left, bottom-top)
+                return bbox, (left, top, right - left, bottom - top)
 
             iou = bbox_iou(bbox, crop_bb[np.newaxis])
             if min_iou <= iou.min() and iou.max() <= max_iou:
                 top, bottom = crop_t, crop_t + crop_h
                 left, right = crop_l, crop_l + crop_w
-                candidates.append((left, top, right-left, bottom-top))
+                candidates.append((left, top, right - left, bottom - top))
                 break
 
     # random select one

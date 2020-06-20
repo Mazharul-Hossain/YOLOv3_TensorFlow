@@ -61,7 +61,7 @@ update_part = ['yolov3/yolov3_head']
 
 ### other training strategies
 multi_scale_train = True  # Whether to apply multi-scale training strategy. Image size varies from [320, 320] to [640, 640] by default.
-use_label_smooth = True # Whether to use class label smoothing strategy.
+use_label_smooth = True  # Whether to use class label smoothing strategy.
 use_focal_loss = True  # Whether to apply focal loss on the conf loss.
 use_mix_up = True  # Whether to use mix up data augmentation strategy. 
 use_warm_up = True  # whether to use warm up strategy to prevent from gradient exploding.

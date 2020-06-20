@@ -31,6 +31,3 @@ with tf.Session() as sess:
     sess.run(load_ops)
     saver.save(sess, save_path=save_path)
     print('TensorFlow model checkpoint has been saved to {}'.format(save_path))
-
-
-

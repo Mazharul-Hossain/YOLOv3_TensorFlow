@@ -22,7 +22,8 @@ parser = argparse.ArgumentParser(description="YOLO-V3 eval procedure.")
 parser.add_argument("--eval_file", type=str, default="./data/my_data/val.txt",
                     help="The path of the validation or test txt file.")
 
-parser.add_argument("--restore_path", type=str, default="./data/checkpoint_whole_finetune_no_letterbox/best_model_Epoch_32_step_91046_mAP_0.8754_loss_2.2147_lr_3e-05",
+parser.add_argument("--restore_path", type=str,
+                    default="./data/checkpoint_whole_finetune_no_letterbox/best_model_Epoch_32_step_91046_mAP_0.8754_loss_2.2147_lr_3e-05",
                     help="The path of the weights to restore.")
 
 parser.add_argument("--anchor_path", type=str, default="./data/yolo_anchors.txt",
@@ -69,7 +70,8 @@ is_training = tf.placeholder(dtype=tf.bool, name="phase_train")
 handle_flag = tf.placeholder(tf.string, [], name='iterator_handle_flag')
 pred_boxes_flag = tf.placeholder(tf.float32, [1, None, None])
 pred_scores_flag = tf.placeholder(tf.float32, [1, None, None])
-gpu_nms_op = gpu_nms(pred_boxes_flag, pred_scores_flag, args.class_num, args.nms_topk, args.score_threshold, args.nms_threshold)
+gpu_nms_op = gpu_nms(pred_boxes_flag, pred_scores_flag, args.class_num, args.nms_topk, args.score_threshold,
+                     args.nms_threshold)
 
 ##################
 # tf.data pipeline
@@ -77,7 +79,9 @@ gpu_nms_op = gpu_nms(pred_boxes_flag, pred_scores_flag, args.class_num, args.nms
 val_dataset = tf.data.TextLineDataset(args.eval_file)
 val_dataset = val_dataset.batch(1)
 val_dataset = val_dataset.map(
-    lambda x: tf.py_func(get_batch_data, [x, args.class_num, args.img_size, args.anchors, 'val', False, False, args.letterbox_resize], [tf.int64, tf.float32, tf.float32, tf.float32, tf.float32]),
+    lambda x: tf.py_func(get_batch_data,
+                         [x, args.class_num, args.img_size, args.anchors, 'val', False, False, args.letterbox_resize],
+                         [tf.int64, tf.float32, tf.float32, tf.float32, tf.float32]),
     num_parallel_calls=args.num_threads
 )
 val_dataset.prefetch(args.prefetech_buffer)
